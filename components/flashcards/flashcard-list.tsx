@@ -48,16 +48,13 @@ export default function FlashcardList({
   };
 
   const toggleStar = (id: string) => {
-    const storedFlashcards = JSON.parse(localStorage.getItem('flashcards') || '[]');
-    const updatedFlashcards = storedFlashcards.map((card: Flashcard) => 
+    const updatedCards = flashcards.map(card =>
       card.id === id ? { ...card, isStarred: !card.isStarred } : card
     );
-    localStorage.setItem('flashcards', JSON.stringify(updatedFlashcards));
-    
-    // Update the current flashcards array
-    const updatedCard = updatedFlashcards.find(card => card.id === id);
-    if (updatedCard && onStarToggle) {
-      onStarToggle(id, updatedCard.isStarred);
+    localStorage.setItem('flashcards', JSON.stringify(updatedCards));
+    if (onStarToggle) {
+      const updated = updatedCards.find(card => card.id === id);
+      onStarToggle(id, !!updated?.isStarred);
     }
   };
 
