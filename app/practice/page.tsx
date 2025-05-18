@@ -173,21 +173,22 @@ export default function PracticePage() {
                       Select Category
                     </label>
                     <Select
-                      value={selectedCategory || "all"}
-                      onValueChange={value => setSelectedCategory(value === "all" ? null : value)}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="All Categories" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Categories</SelectItem>
-                        {categories.map(category => (
-                          <SelectItem key={category.id} value={category.id}>
-                            {category.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+  value={selectedCategory || "all"}
+  onValueChange={value => setSelectedCategory(value === "all" ? null : value)}
+>
+  <SelectTrigger className="w-full">
+    <SelectValue>All Categories</SelectValue>
+  </SelectTrigger>
+  <SelectContent>
+    <SelectItem value="all">All Categories</SelectItem>
+    {categories.map(category => (
+      <SelectItem key={category.id} value={category.id}>
+        {category.name}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
+
                   </div>
                 )}
 
