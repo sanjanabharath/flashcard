@@ -1,15 +1,29 @@
 "use client";
 
 import Link from "next/link";
-import { BookOpen, BarChart2, Plus, Menu } from "lucide-react";
+import { BookOpen, BarChart2, Plus, Menu, Sun, Moon } from "lucide-react";
+import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 
+const navLinks = [
+  { href: "/", label: "Home", icon: null },
+  { href: "/flashcards", label: "My Flashcards", icon: <BookOpen className="h-4 w-4 mr-2" /> },
+  { href: "/practice", label: "Practice", icon: <Plus className="h-4 w-4 mr-2" /> },
+  { href: "/progress", label: "Progress", icon: <BarChart2 className="h-4 w-4 mr-2" /> },
+  { href: "/schedule", label: "Schedule", icon: <Calendar className="h-4 w-4 mr-2" /> },
+];
+
+// Import Calendar icon
+import { Calendar } from "lucide-react";
+
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => { 
     const handleScroll = () => {
@@ -19,13 +33,6 @@ export default function Header() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const navLinks = [
-    { href: "/", label: "Home", icon: null },
-    { href: "/flashcards", label: "My Flashcards", icon: <BookOpen className="h-4 w-4 mr-2" /> },
-    { href: "/practice", label: "Practice", icon: <Plus className="h-4 w-4 mr-2" /> },
-    { href: "/progress", label: "Progress", icon: <BarChart2 className="h-4 w-4 mr-2" /> },
-  ];
 
   return (
     <header
@@ -52,8 +59,8 @@ export default function Header() {
                   href={link.href}
                   className={`flex items-center text-sm font-medium transition-colors hover:text-orange-500 ${
                     pathname === link.href
-                      ? "text-orange-600 dark:text-orange-400"
-                      : "text-gray-600 dark:text-gray-300"
+                      ? "text-orange-500 dark:text-orange-400"
+                      : "text-gray-600 dark:text-gray-400"
                   }`}
                 >
                   {link.icon}
@@ -62,41 +69,74 @@ export default function Header() {
               </li>
             ))}
           </ul>
-          <Button className="ml-6 h-8 px-4 bg-orange-500 hover:bg-orange-600">
-            Create Flashcard
+          <Button
+            variant="ghost"
+            size="icon"
+            className="ml-4 p-2"
+            onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+          >
+            {theme === 'light' ? (
+              <Moon className="h-4 w-4" />
+            ) : (
+              <Sun className="h-4 w-4" />
+            )}
           </Button>
         </nav>
+        <Button className="ml-6 h-8 px-4 bg-orange-500 hover:bg-orange-600">
+          Create Flashcard
+        </Button>
 
         {/* Mobile Navigation */}
-        <Sheet>
-          <SheetTrigger asChild className="md:hidden">
-            <Button variant="ghost" size="icon" aria-label="Menu">
-              <Menu className="h-6 w-6" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="right" className="w-[250px] sm:w-[300px]">
-            <nav className="flex flex-col gap-4 mt-8">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`flex items-center py-2 text-lg font-medium transition-colors hover:text-orange-500 ${
-                    pathname === link.href
-                      ? "text-orange-600 dark:text-orange-400"
-                      : "text-gray-600 dark:text-gray-300"
-                  }`}
-                >
-                  {link.icon}
-                  {link.label}
-                </Link>
-              ))}
-              <Button className="mt-4 h-10 px-4 bg-orange-500 hover:bg-orange-600">
-                Create Flashcard
+        <nav className="md:hidden">
+          <Sheet
+            modal={false}
+            open={isOpen}
+            onOpenChange={setIsOpen}
+          >
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Menu className="h-4 w-4" />
               </Button>
-            </nav>
-          </SheetContent>
-        </Sheet>
+            </SheetTrigger>
+            <SheetContent side="right">
+              <div className="flex flex-col space-y-4">
+                <div className="flex flex-col space-y-2">
+                  {navLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className={`flex items-center text-sm font-medium transition-colors hover:text-orange-500 ${
+                        pathname === link.href
+                          ? "text-orange-500 dark:text-orange-400"
+                          : "text-gray-600 dark:text-gray-400"
+                      }`}
+                    >
+                      {link.icon}
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="ml-auto p-2"
+                  onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+                >
+                  {theme === 'light' ? (
+                    <Moon className="h-4 w-4" />
+                  ) : (
+                    <Sun className="h-4 w-4" />
+                  )}
+                </Button>
+                <Button className="mt-4 h-10 px-4 bg-orange-500 hover:bg-orange-600">
+                  Create Flashcard
+                </Button>
+              </div>
+            </SheetContent>
+          </Sheet>
+        </nav>
       </div>
     </header>
   );
 }
+
