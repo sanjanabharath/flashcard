@@ -6,6 +6,7 @@ import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { PageTransition } from './components/page-transition';
 import { ThemeProvider } from './components/theme-provider';
+import ToasterProvider from '@/components/ui/toast-provider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,15 +23,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem={true}
-        >
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="flex min-h-screen flex-col">
             <Header />
             <PageTransition>
               <main className="flex-1">
+                <ToasterProvider />
                 {children}
               </main>
             </PageTransition>

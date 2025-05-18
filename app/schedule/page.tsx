@@ -1,7 +1,7 @@
 'use client'
 
 import { Calendar } from "@/components/ui/calendar";
-import { Calendar as CalendarIcon, Clock, BookOpen, Repeat, Save, Trash2, Plus, X } from "lucide-react";
+import { Calendar as CalendarIcon, Clock, BookOpen, Repeat, Save, Trash2, Plus, X, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -13,6 +13,7 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
 import { useState } from "react";
+import { toast } from "react-hot-toast";
 
 const PREDEFINED_SCHEDULES = {
   beginner: [1, 3, 7, 14],
@@ -102,10 +103,14 @@ export default function SchedulePage() {
 
   const getDifficultyColor = (diff) => {
     switch (diff) {
-      case 'easy': return 'bg-green-100 text-green-800';
-      case 'medium': return 'bg-yellow-100 text-yellow-800';
-      case 'hard': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'easy': 
+        return 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border-green-200 dark:border-green-700';
+      case 'medium': 
+        return 'bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-300 border-yellow-200 dark:border-yellow-700';
+      case 'hard': 
+        return 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 border-red-200 dark:border-red-700';
+      default: 
+        return 'bg-gray-50 dark:bg-gray-900/20 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700';
     }
   };
 
@@ -123,12 +128,27 @@ export default function SchedulePage() {
     };
     
     console.log('Schedule created:', schedule);
-    alert(`Schedule created successfully! 
-    
-Study session scheduled for ${format(selectedDate, 'PPP')} at ${selectedTime}
-${flashcards.length} flashcard(s) selected
-Duration: ${duration} minutes
-${isRecurring ? `Recurring on: ${recurringDays.join(', ')}` : 'One-time session'}`);
+    toast.success(
+      <div className="flex items-center gap-2">
+        <Check className="w-5 h-5 text-green-500" />
+        <span>Schedule created successfully!</span>
+      </div>
+    );
+  };
+
+  const handleSaveDraft = () => {
+    // Save draft logic here
+    toast(
+      <div className="flex items-center gap-2">
+        <Save className="w-5 h-5 text-yellow-500" />
+        <span>Draft saved successfully!</span>
+      </div>,
+      {
+        icon: <Save className="w-5 h-5 text-yellow-500" />,
+        duration: 3000,
+        position: "top-right"
+      }
+    );
   };
 
   const isFormValid = () => {
@@ -277,12 +297,16 @@ ${isRecurring ? `Recurring on: ${recurringDays.join(', ')}` : 'One-time session'
                   <p className="text-gray-500 text-sm">No flashcards selected</p>
                 ) : (
                   flashcards.map((flashcard) => (
-                    <div key={flashcard.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div key={flashcard.id} className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800/50">
                       <div className="flex-1">
-                        <div className="font-medium">{flashcard.name}</div>
+                        <div className="font-medium text-gray-900 dark:text-gray-100">{flashcard.name}</div>
                         <div className="flex gap-2 mt-1">
-                          <Badge variant="outline">{flashcard.category}</Badge>
-                          <Badge className={getDifficultyColor(flashcard.difficulty)}>
+                          <Badge variant="outline" className="text-gray-900 dark:text-gray-100 bg-white/50 dark:bg-gray-800/50 border-gray-200 dark:border-gray-700">
+                            {flashcard.category}
+                          </Badge>
+                          <Badge 
+                            className={`text-gray-900 dark:text-gray-100 ${getDifficultyColor(flashcard.difficulty)}`}
+                          >
                             {flashcard.difficulty}
                           </Badge>
                         </div>
@@ -290,6 +314,7 @@ ${isRecurring ? `Recurring on: ${recurringDays.join(', ')}` : 'One-time session'
                       <Button
                         variant="ghost"
                         size="icon"
+                        className="text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800"
                         onClick={() => handleRemoveFlashcard(flashcard.id)}
                       >
                         <X className="h-4 w-4" />
@@ -443,7 +468,10 @@ ${isRecurring ? `Recurring on: ${recurringDays.join(', ')}` : 'One-time session'
 
       {/* Action Buttons */}
       <div className="mt-8 flex justify-between">
-        <Button variant="outline">
+        <Button 
+          variant="outline"
+          onClick={handleSaveDraft}
+        >
           <Save className="mr-2 h-4 w-4" />
           Save as Draft
         </Button>

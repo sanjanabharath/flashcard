@@ -29,12 +29,14 @@ interface FlashcardListProps {
   flashcards: Flashcard[];
   categories: Category[];
   onDelete: (id: string) => void;
+  onStarToggle?: (id: string, isStarred: boolean) => void;
 }
 
 export default function FlashcardList({ 
   flashcards, 
   categories,
-  onDelete 
+  onDelete,
+  onStarToggle
 }: FlashcardListProps) {
   const [flippedCards, setFlippedCards] = useState<Record<string, boolean>>({});
   
@@ -51,7 +53,12 @@ export default function FlashcardList({
       card.id === id ? { ...card, isStarred: !card.isStarred } : card
     );
     localStorage.setItem('flashcards', JSON.stringify(updatedFlashcards));
-    window.location.reload(); // Refresh to see changes - in a real app would use state management
+    
+    // Update the current flashcards array
+    const updatedCard = updatedFlashcards.find(card => card.id === id);
+    if (updatedCard && onStarToggle) {
+      onStarToggle(id, updatedCard.isStarred);
+    }
   };
 
   const getCategoryName = (categoryId: string | null) => {

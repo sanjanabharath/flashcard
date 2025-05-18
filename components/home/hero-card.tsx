@@ -26,7 +26,7 @@ export default function HeroCard() {
   }, [isFlipped, controls]);
 
   return (
-    <div className="perspective-1000 w-full max-w-md mx-auto">
+    <div className="perspective-1000 w-full max-w-md mx-auto h-[300px] flex items-center justify-center">
       <motion.div
         className="relative w-full h-64 preserve-3d"
         animate={controls}
