@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, Search, FolderOpen, Star } from "lucide-react";
+import { Plus, Search, FolderOpen } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
@@ -158,28 +158,11 @@ export default function FlashcardsPage() {
             </TabsContent>
 
             <TabsContent value="starred" className="mt-0">
-              {filteredFlashcards.some(card => card.isStarred) ? (
-                <FlashcardList 
-                  flashcards={filteredFlashcards.filter(card => card.isStarred)} 
-                  categories={categories}
-                  onDelete={handleDeleteFlashcard}
-                />
-              ) : (
-                <div className="text-center py-12 border rounded-lg bg-gray-50 dark:bg-gray-900">
-                  <Star className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                  <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-2">No Starred Cards</h3>
-                  <p className="text-gray-600 dark:text-gray-300 mb-4">
-                    Star some cards to add them to your favorites
-                  </p>
-                  <Button 
-                    onClick={() => setIsCreateDialogOpen(true)}
-                    className="bg-orange-500 hover:bg-orange-600"
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Create Flashcard
-                  </Button>
-                </div>
-              )}
+              <FlashcardList 
+                flashcards={filteredFlashcards.filter(card => card.isStarred)} 
+                categories={categories}
+                onDelete={handleDeleteFlashcard}
+              />
             </TabsContent>
           </Tabs>
         </div>
