@@ -4,13 +4,20 @@ import { useState, useEffect } from "react";
 import Confetti from 'react-confetti';
 import { Button } from "@/components/ui/button";
 import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Progress } from "@/components/ui/progress";
+import { CustomProgress } from "@/components/ui/custom-progress";
 import StudyCard from "@/components/practice/study-card";
 import ResultsCard from "@/components/practice/results-card";
 import { Flashcard, Category, StudySession } from "@/lib/types";
@@ -116,7 +123,6 @@ export default function PracticePage() {
     setShowingResults(true);
     setShowConfetti(true);
 
-    // Hide confetti after 3 seconds
     setTimeout(() => {
       setShowConfetti(false);
     }, 6000);
@@ -132,7 +138,7 @@ export default function PracticePage() {
   };
 
   const progress =
-    studyCards.length > 0
+    studyCards.length > 0 && currentCardIndex < studyCards.length
       ? Math.round(((currentCardIndex + 1) / studyCards.length) * 100)
       : 0;
 
@@ -141,8 +147,8 @@ export default function PracticePage() {
       {showConfetti && (
         <div className="fixed inset-0 z-10">
           <Confetti
-            width={window.innerWidth}
-            height={window.innerHeight}
+            width={typeof window !== "undefined" ? window.innerWidth : 300}
+            height={typeof window !== "undefined" ? window.innerHeight : 300}
             numberOfPieces={500}
             gravity={0.2}
             recycle={false}
@@ -188,7 +194,6 @@ export default function PracticePage() {
                         ))}
                       </SelectContent>
                     </Select>
-
                   </div>
                 )}
 
@@ -214,7 +219,10 @@ export default function PracticePage() {
                 {currentCardIndex + 1} of {studyCards.length}
               </span>
             </div>
-            <Progress value={progress} className="h-2 bg-gray-200 dark:bg-gray-700" />
+            <CustomProgress
+              value={progress}
+              className="w-full"
+            />
           </div>
 
           {studyCards.length > 0 && currentCardIndex < studyCards.length && (

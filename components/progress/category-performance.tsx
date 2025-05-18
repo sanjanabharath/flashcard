@@ -5,8 +5,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { CustomProgress } from "@/components/ui/custom-progress";
 import { Flashcard, Category } from "@/lib/types";
+
+// Helper function to format percentage
+const formatPercentage = (value: number) => {
+  return Math.round(value);
+};
 
 interface CategoryPerformanceProps {
   flashcards: Flashcard[];
@@ -133,9 +138,12 @@ export default function CategoryPerformance({
                   <div>
                     <div className="flex justify-between mb-1 text-sm">
                       <span>Accuracy</span>
-                      <span>{category.correctRate}%</span>
+                      <span>{formatPercentage(category.correctRate)}%</span>
                     </div>
-                    <Progress value={category.correctRate} className="h-2" />
+                    <CustomProgress
+                      value={formatPercentage(category.correctRate)}
+                      className="w-full"
+                    />
                   </div>
                   
                   <div className="grid grid-cols-2 gap-4">
